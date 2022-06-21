@@ -1,10 +1,10 @@
 class Node:
     def __init__(self) -> None:
         self.parent = None
-        self.type = 'O'
+        self.marker = 'O'
     
     def __repr__(self) -> str:
-        return f"{self.type}"
+        return f"{self.marker}"
 class Grid:
     def __init__(self, width: int, height: int) -> None:
         self.w = width
