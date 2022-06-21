@@ -36,8 +36,8 @@ def reconstruct_path(cameFrom: dict, curr: tuple) -> list:
     nodes = list(cameFrom.keys())
     while curr in nodes:
         path.append(curr)
-        curr = cameFrom[curr]
         nodes.remove(curr)
+        curr = cameFrom[curr]
     path.reverse()
     return path
 
