@@ -65,16 +65,12 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
             return reconstruct_path(cameFrom, curr_n)
         
         # check neighbors
-        neighbors = [
-            (curr_n[0] - 1, curr_n[1] - 1), # top left
-            (curr_n[0], curr_n[1] - 1), # above
-            (curr_n[0] + 1, curr_n[1] - 1), # top right
-            (curr_n[0] - 1, curr_n[1]), # left
-            (curr_n[0] + 1, curr_n[1]), # right
-            (curr_n[0] - 1, curr_n[1] + 1), # bottom left
-            (curr_n[0], curr_n[1] + 1), # below
-            (curr_n[0] + 1, curr_n[1] + 1), # bottom right
-        ]
+        neighbors = []
+        for j in range(curr_n[1] - 1, curr_n[1] + 2):
+            for i in range(curr_n[0] - 1, curr_n[0] + 2):
+                neigh = (i, j)
+                if neigh[0] != -1 and neigh[1] != -1:
+                    neighbors.append(neigh)
         
         for neighbor in neighbors:
             # calc distance from curr to neighbor
