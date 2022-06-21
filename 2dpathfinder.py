@@ -43,6 +43,7 @@ def reconstruct_path(cameFrom: dict, curr: tuple) -> list:
 def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
     # min-heap of nodes that needs to be expanded
     openList = []
+    heapq.heappush(openList, start)
 
     # dictionary to keep track of shortest path
     cameFrom = {start: None}
@@ -92,5 +93,5 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
     return -1
 
 if __name__ == "__main__":
-    myGrid = Grid(5, 5)
-    myGrid.display()
+    myGrid = Grid(10, 10)
+    print(pathfinder(myGrid, (0, 0), (9, 9), heuristic))
