@@ -50,9 +50,9 @@ def find_neighbors(curr_n: tuple, max_x: int, max_y: int) -> list:
     for j in range(curr_n[1] - 1, curr_n[1] + 2):
         for i in range(curr_n[0] - 1, curr_n[0] + 2):
             neigh = (i, j)
-            if neigh != curr_n and neigh[0] != -1 and neigh[1] != -1:
-                if neigh[0] != max_x and neigh[1] != max_y:
-                    neighbors.append(neigh)
+            blocked = [curr_n[0], curr_n[1], -1, max_x, max_y]
+            if neigh[0] not in blocked and neigh[1] not in blocked:
+                neighbors.append(neigh)
     return  neighbors
     
 
