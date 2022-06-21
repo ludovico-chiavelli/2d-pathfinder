@@ -17,5 +17,7 @@ class Grid:
         for row in self.grid:
             print(row)
 
-myGrid = Grid(5, 5)
-myGrid.display()
+
+if __name__ == "__main__":
+    myGrid = Grid(5, 5)
+    myGrid.display()
