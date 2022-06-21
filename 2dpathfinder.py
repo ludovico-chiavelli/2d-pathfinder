@@ -15,6 +15,10 @@ class Grid:
         # Generate grid
         self.grid = [[Node() for i in range(self.width)] for j in range(self.height)]
     
+    def addObstacle(self, coord: tuple):
+        x, y = coord[0], coord[1]
+        self.grid[y][x].marker = 'X'
+    
     def display(self) -> None:
         for row in self.grid:
             print(row)
@@ -97,4 +101,13 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 
 if __name__ == "__main__":
     myGrid = Grid(10, 10)
+
+    # add in obstacles
+    myGrid.addObstacle((9, 7))
+    myGrid.addObstacle((8, 7))
+    myGrid.addObstacle((7, 7))
+    myGrid.addObstacle((7, 8))
+
+    myGrid.display()
+
     print(pathfinder(myGrid, (0, 0), (9, 9), heuristic))
