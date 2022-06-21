@@ -62,6 +62,34 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 
         if curr_n == dest:
             return reconstruct_path(cameFrom, curr_n)
+        
+        # check neighbors
+        neighbors = [
+            (curr_n[0] - 1, curr_n[1] - 1), # top left
+            (curr_n[0], curr_n[1] - 1), # above
+            (curr_n[0] + 1, curr_n[1] - 1), # top right
+            (curr_n[0] - 1, curr_n[1]), # left
+            (curr_n[0] + 1, curr_n[1]), # right
+            (curr_n[0] - 1, curr_n[1] + 1), # bottom left
+            (curr_n[0], curr_n[1] + 1), # below
+            (curr_n[0] + 1, curr_n[1] + 1), # bottom right
+        ]
+        
+        for neighbor in neighbors:
+            # calc distance from curr to neighbor
+            if curr_n[0] == neighbor[0] or curr_n[1] == neighbor[1]: # the neighbor is on the same column or row
+                d = 10
+            else:
+                d= 14
+            tentative_gScore = gScore[curr_n] + d
+
+            if tentative_gScore < gScore[neighbor]:
+                cameFrom[neighbor] = curr_n
+                gScore[neighbor] = tentative_gScore
+                fScore[neighbor] = tentative_gScore + heuristic(neighbor, dest)
+                if neighbor not in openList:
+                    heapq.heappush(openList, neighbor)
+    return -1
 
 if __name__ == "__main__":
     myGrid = Grid(5, 5)
