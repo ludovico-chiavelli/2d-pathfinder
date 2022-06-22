@@ -1,6 +1,7 @@
 import heapq
 import math
 import itertools
+import random
 
 class Node:
     def __init__(self) -> None:
@@ -12,6 +13,10 @@ class Grid:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
+        self.allCoords = []
+        for y in range(self.height):
+            for x in range(self.width):
+                self.allCoords.append((x,y))
 
         # Generate grid
         self.grid = [[Node() for i in range(self.width)] for j in range(self.height)]
@@ -19,11 +24,25 @@ class Grid:
     def addObstacle(self, coord: tuple):
         x, y = coord[0], coord[1]
         self.grid[y][x].marker = 'X'
-    
+        
+    def addRandomObstacles(self, amount: int):
+        self.obs_coords = []
+        possible_coords = self.allCoords.copy()
+        # remove start and end point. These are hardcoded for the moment
+        possible_coords.remove((0,0))
+        possible_coords.remove((self.width - 1, self.height - 1))
+        
+        for i in range(amount):
+            ind_select = random.randint(0, len(possible_coords) - 1)
+            x, y = possible_coords[ind_select]
+            self.grid[y][x].marker = "X"
+            self.obs_coords.append((x, y))
+
     def display(self) -> None:
         print(" * " * self.width)
         for row in self.grid:
             print(row)
+        print(f"\nRandomly placed obstacles at following coords: {self.obs_coords} \n")
         print(" * " * self.width)
 
 def heuristic(curr_coord: tuple, dest_coord: tuple) -> int:
@@ -67,15 +86,11 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 
     # dictionary to keep track of shortest path
     cameFrom = {start: None}
-
-    allCoords = []
-    for y in range(grid.height):
-        for x in range(grid.width):
-            allCoords.append((x,y))
-    gScore = dict.fromkeys(allCoords, math.inf)
+    
+    gScore = dict.fromkeys(grid.allCoords, math.inf)
     gScore[start] = 0
 
-    fScore = dict.fromkeys(allCoords, math.inf)
+    fScore = dict.fromkeys(grid.allCoords, math.inf)
     fScore[start] = heuristic(start, dest)
 
     counter = itertools.count()
@@ -116,11 +131,8 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 if __name__ == "__main__":
     myGrid = Grid(10, 10)
 
-    # add in obstacles
-    myGrid.addObstacle((9, 7))
-    myGrid.addObstacle((8, 7))
-    myGrid.addObstacle((7, 7))
-    myGrid.addObstacle((7, 8))
+    # add in obstacles 20 random obstacles
+    myGrid.addRandomObstacles(20)
 
     myGrid.display()
     path, num_steps = pathfinder(myGrid, (0, 0), (9, 9), heuristic)
