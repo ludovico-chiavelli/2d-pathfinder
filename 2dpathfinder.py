@@ -1,6 +1,7 @@
 import heapq
 import math
 import itertools
+import random
 
 class Node:
     def __init__(self) -> None:
@@ -23,6 +24,18 @@ class Grid:
     def addObstacle(self, coord: tuple):
         x, y = coord[0], coord[1]
         self.grid[y][x].marker = 'X'
+        
+    def addRandomObstacles(self, amount: int):
+        obs_coords = []
+        possible_coords = self.allCoords.copy()
+        # remove start and end point. These are hardcoded for the moment
+        possible_coords.remove((0,0))
+        possible_coords.remove((self.width - 1, self.height - 1))
+        
+        for i in range(amount):
+            ind_select = random.randint(0, len(possible_coords) - 1)
+            x, y = possible_coords[ind_select]
+            self.grid[y][x].marker = "X"
 
     def display(self) -> None:
         print(" * " * self.width)
@@ -116,11 +129,8 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 if __name__ == "__main__":
     myGrid = Grid(10, 10)
 
-    # add in obstacles
-    myGrid.addObstacle((9, 7))
-    myGrid.addObstacle((8, 7))
-    myGrid.addObstacle((7, 7))
-    myGrid.addObstacle((7, 8))
+    # add in obstacles 20 random obstacles
+    myGrid.addRandomObstacles(20)
 
     myGrid.display()
     path, num_steps = pathfinder(myGrid, (0, 0), (9, 9), heuristic)
