@@ -12,6 +12,10 @@ class Grid:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
+        self.allCoords = []
+        for y in range(self.height):
+            for x in range(self.width):
+                self.allCoords.append((x,y))
 
         # Generate grid
         self.grid = [[Node() for i in range(self.width)] for j in range(self.height)]
@@ -19,7 +23,7 @@ class Grid:
     def addObstacle(self, coord: tuple):
         x, y = coord[0], coord[1]
         self.grid[y][x].marker = 'X'
-    
+
     def display(self) -> None:
         print(" * " * self.width)
         for row in self.grid:
@@ -67,15 +71,11 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
 
     # dictionary to keep track of shortest path
     cameFrom = {start: None}
-
-    allCoords = []
-    for y in range(grid.height):
-        for x in range(grid.width):
-            allCoords.append((x,y))
-    gScore = dict.fromkeys(allCoords, math.inf)
+    
+    gScore = dict.fromkeys(grid.allCoords, math.inf)
     gScore[start] = 0
 
-    fScore = dict.fromkeys(allCoords, math.inf)
+    fScore = dict.fromkeys(grid.allCoords, math.inf)
     fScore[start] = heuristic(start, dest)
 
     counter = itertools.count()
