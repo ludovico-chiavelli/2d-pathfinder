@@ -21,8 +21,10 @@ class Grid:
         self.grid[y][x].marker = 'X'
     
     def display(self) -> None:
+        print(" * " * self.width)
         for row in self.grid:
             print(row)
+        print("*" * self.width)
 
 def heuristic(curr_coord: tuple, dest_coord: tuple) -> int:
     """Manhattan heuristic for estimating distance from current node to destination node
@@ -85,7 +87,11 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
         curr_n = heapq.heappop(openList)[-1]
 
         if curr_n == dest:
-            return reconstruct_path(cameFrom, curr_n)
+            path = reconstruct_path(cameFrom, curr_n)
+            for node in path:
+                x, y = node
+                grid.grid[y][x] = "%"
+            return path
         
         neighbors = find_neighbors(grid, curr_n, grid.width, grid.height)
 
@@ -119,3 +125,4 @@ if __name__ == "__main__":
     myGrid.display()
 
     print(pathfinder(myGrid, (0, 0), (9, 9), heuristic))
+    myGrid.display()
