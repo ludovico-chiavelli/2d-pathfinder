@@ -1,5 +1,6 @@
 import heapq
 import math
+import itertools
 
 class Node:
     def __init__(self) -> None:
@@ -45,22 +46,22 @@ def reconstruct_path(cameFrom: dict, curr: tuple) -> list:
     path.reverse()
     return path
 
-def find_neighbors(curr_n: tuple, max_x: int, max_y: int) -> list:
+def find_neighbors(grid: Grid, curr_n: tuple, max_x: int, max_y: int) -> list:
     neighbors = []
     for j in range(curr_n[1] - 1, curr_n[1] + 2):
         for i in range(curr_n[0] - 1, curr_n[0] + 2):
-            neigh = (i, j)
-            blocked = [-1, max_x, max_y, "X"]
-            if neigh != curr_n and neigh[0] not in blocked and neigh[1] not in blocked:
-                neighbors.append(neigh)
+            if 0 <= i < grid.width and 0 <= j < grid.height:
+                neigh_marker = grid.grid[j][i].marker
+                neigh_coords = (i, j)
+                if neigh_coords != curr_n and neigh_marker != "X":
+                    neighbors.append(neigh_coords)
     return  neighbors
     
 
 
 def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
-    # min-heap of nodes that needs to be expanded
+    # min-heap of nodes that needs to be expanded. Nodes are in the format (fScore, order, (x, y))
     openList = []
-    heapq.heappush(openList, start)
 
     # dictionary to keep track of shortest path
     cameFrom = {start: None}
@@ -75,13 +76,18 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
     fScore = dict.fromkeys(allCoords, math.inf)
     fScore[start] = heuristic(start, dest)
 
+    counter = itertools.count()
+    count = next(counter)
+    start_formatted = (fScore[start], count, start)
+    heapq.heappush(openList, start_formatted)
+
     while len(openList) != 0:
-        curr_n = heapq.heappop(openList)
+        curr_n = heapq.heappop(openList)[-1]
 
         if curr_n == dest:
             return reconstruct_path(cameFrom, curr_n)
         
-        neighbors = find_neighbors(curr_n, grid.width, grid.height)
+        neighbors = find_neighbors(grid, curr_n, grid.width, grid.height)
 
         for neighbor in neighbors:
             # calc distance from curr to neighbor
@@ -96,7 +102,9 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
                 gScore[neighbor] = tentative_gScore
                 fScore[neighbor] = tentative_gScore + heuristic(neighbor, dest)
                 if neighbor not in openList:
-                    heapq.heappush(openList, neighbor)
+                    count = next(counter)
+                    neighbor_formatted = (fScore[neighbor], count, neighbor)
+                    heapq.heappush(openList, neighbor_formatted)
     return -1
 
 if __name__ == "__main__":
