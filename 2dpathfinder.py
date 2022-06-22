@@ -24,7 +24,7 @@ class Grid:
         print(" * " * self.width)
         for row in self.grid:
             print(row)
-        print("*" * self.width)
+        print(" * " * self.width)
 
 def heuristic(curr_coord: tuple, dest_coord: tuple) -> int:
     """Manhattan heuristic for estimating distance from current node to destination node
@@ -91,7 +91,7 @@ def pathfinder(grid: Grid, start: tuple, dest: tuple, heuristic) -> None:
             for node in path:
                 x, y = node
                 grid.grid[y][x] = "%"
-            return path
+            return path, len(path)
         
         neighbors = find_neighbors(grid, curr_n, grid.width, grid.height)
 
@@ -123,6 +123,6 @@ if __name__ == "__main__":
     myGrid.addObstacle((7, 8))
 
     myGrid.display()
-
-    print(pathfinder(myGrid, (0, 0), (9, 9), heuristic))
+    path, num_steps = pathfinder(myGrid, (0, 0), (9, 9), heuristic)
+    print(f"\nPath taken {path}. Number of Steps {num_steps}\n")
     myGrid.display()
