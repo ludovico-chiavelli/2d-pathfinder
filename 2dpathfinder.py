@@ -26,7 +26,7 @@ class Grid:
         self.grid[y][x].marker = 'X'
         
     def addRandomObstacles(self, amount: int):
-        obs_coords = []
+        self.obs_coords = []
         possible_coords = self.allCoords.copy()
         # remove start and end point. These are hardcoded for the moment
         possible_coords.remove((0,0))
@@ -36,11 +36,13 @@ class Grid:
             ind_select = random.randint(0, len(possible_coords) - 1)
             x, y = possible_coords[ind_select]
             self.grid[y][x].marker = "X"
+            self.obs_coords.append((x, y))
 
     def display(self) -> None:
         print(" * " * self.width)
         for row in self.grid:
             print(row)
+        print(f"\nRandomly placed obstacles at following coords: {self.obs_coords} \n")
         print(" * " * self.width)
 
 def heuristic(curr_coord: tuple, dest_coord: tuple) -> int:
